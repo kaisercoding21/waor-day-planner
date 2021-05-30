@@ -4,63 +4,54 @@ var hoursInDay = [
     hour: "9",
     time: "09",
     toc: "AM",
-    note: "",
   },
   {
     slot: "2",
     hour: "10",
     time: "10",
     toc: "AM",
-    note: "",
   },
   {
     slot: "3",
     hour: "11",
     time: "11",
     toc: "AM",
-    note: "",
   },
   {
     slot: "4",
     hour: "12",
     time: "12",
     toc: "PM",
-    note: "",
   },
   {
     slot: "5",
     hour: "1",
     time: "13",
     toc: "PM",
-    note: "",
   },
   {
     slot: "6",
     hour: "2",
     time: "14",
     toc: "PM",
-    note: "",
   },
   {
     slot: "7",
     hour: "3",
     time: "15",
     toc: "PM",
-    note: "",
   },
   {
     slot: "8",
     hour: "4",
     time: "16",
     toc: "PM",
-    note: "",
   },
   {
     slot: "9",
     hour: "5",
     time: "17",
     toc: "PM",
-    note: "",
   },
 ];
 
@@ -71,26 +62,22 @@ function currentDate() {
 }
 
 // stringify array and save to local storage
-// function stringItUp() {
-//   localStorage.setItem("hoursInDay", JSON.stringify(hoursInDay.note));
-// }
+function stringItUp() {
+  localStorage.setItem(hoursInDay.slot, JSON.stringify(hoursInDay));
+}
 
-// function displayNote() {
-//   hoursInDay.forEach(function (currentHourNote) {
-//     $(currentHourNote.slot).val(currentHourNote.note);
-//   });
-//   console.log(currentHourNote.slot);
-// }
+function retrieve() {
+  localStorage.getItem("hourTime");
+}
 
-// function startUp() {
-//   var storedDay = JSON.parse(localStorage.getItem("myDay"));
+function startUp() {
+  var storedDay = JSON.parse(localStorage.getItem("hoursInDay"));
 
-//   if (storedDay) {
-//     myDay = storedDay;
-//   }
-//   stringItUp();
-//   displayNote();
-// }
+  if (storedDay) {
+    hoursInDay = storedDay;
+  }
+  stringItUp();
+}
 
 hoursInDay.forEach(function (currentHour) {
   // creates timeblocks row
@@ -109,7 +96,10 @@ hoursInDay.forEach(function (currentHour) {
   timeHour.append(timeText);
   timeText.attr({
     class: "col-md-10 description  p-0 ",
+    id: currentHour.slot,
   });
+
+  // retrieveNote;
 
   //   create save button
   var saveStuff = $("<button>").attr({
@@ -118,33 +108,35 @@ hoursInDay.forEach(function (currentHour) {
 
   timeSlot.append(timeHour, timeText, saveStuff);
 
-  if (currentHour.time < moment().format("H")) {
+  if (currentHour.time < moment().format("HH")) {
     timeText.attr({
-      class: "past col-md-10  description p-0",
+      class: "past col-md-10 description p-0",
     });
-  } else if (currentHour.time === moment().format("H")) {
+  } else if (currentHour.time === moment().format("HH")) {
     timeText.attr({
-      class: "present col-md-10  description p-0",
+      class: "present col-md-10 description p-0",
     });
-  } else if (currentHour.time > moment().format("H")) {
+  } else if (currentHour.time > moment().format("HH")) {
     timeText.attr({
-      class: "future col-md-10  description p-0",
+      class: "future col-md-10 description p-0",
     });
   }
-  console.log(currentHour.hour);
 });
-
-// startUp();
 
 // saves data to be used in localStorage
 $(".saveBtn").on("click", function (event) {
   event.preventDefault();
 
-  //   console.log(currentHour.note);
+  var hourTime = $(this).siblings(".description").attr("id");
 
-  //   stringItUp();
-  //   displayNote();
+  var hourNote = $(this).siblings(".description").val();
+  localStorage.setItem(hourTime, hourNote);
+  stringItUp();
 });
+
+// displayNote();
 
 // callbacks
 currentDate();
+startUp();
+retrieve();
